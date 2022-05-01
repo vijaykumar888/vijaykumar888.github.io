@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- <script src="data.js"></script> -->
+	<script>
+		function allowDrop(ev) {
+			ev.preventDefault();
+		}
+
+		function drag(ev) {
+			ev.dataTransfer.setData("text", ev.target.id);
+		}
+
+		function drop(ev) {
+			ev.preventDefault();
+			var data = ev.dataTransfer.getData("text");
+			ev.target.appendChild(document.getElementById(data));
+		}
+		function bubbleSort(array){
+			
+			for(i =0; i< array.length ; i++){
+				for( j=0; j<array.length-1; j++){
+					
+					if(array[j].querySelector(".card-title").textContent > array[j+1].querySelector(".card-title").textContent ){
+						t = array[j];
+						array[j] = array[j+1];
+						array[j+1] = t;
+					}
+				}
+			}
+			return array
+		}
+
+		function sort(e){
+			e.preventDefault()
+			db = document.querySelector("#normal-dashboard")
+			myArr = []
+			listOfNodes = db.querySelectorAll(":scope>div")
+			for( i = 0; i<listOfNodes.length; i++ ){
+				myArr.push(listOfNodes[i]);
+				listOfNodes[i].remove();
+			}
+			myArr = bubbleSort(myArr);
+			for(i = 0; i< myArr.length; i++) db.appendChild(myArr[i])
+			console.log(listOfNodes)
+		}
+		function myfunc(e) {
+			e.preventDefault()
+			const inp = document.querySelector("#group-name")
+			const grp = document.querySelector("#normal-dashboard")
+			console.log(inp.value)
+			if (inp.value != "") {
+				const p = document.createElement("div")
+				p.setAttribute("class", "card-group")
+				p.setAttribute("ondrop", "drop(event)")
+				p.setAttribute("ondragover", "allowDrop(event)")
+				const title = document.createElement("h4")
+				title.textContent = inp.value
+				p.setAttribute("id", "bucket-" + remspace(inp.value))
+				p.appendChild(title)
+				p.setAttribute("style", "background-color:rgb("+ (Math.random()*20 + 200) +"," +(Math.random()*14 + 200)+","+ (Math.random()*18 + 200)+"); width:auto;border: 1px solid black;")
+				grp.appendChild(p)
+			}
+			
+		}
+		function remspace(st){
+			var t = st.replaceAll(" ","-")
+			return t.toLowerCase()
+		}
+		function myfunc5(e){
+			e.preventDefault()
+			formId = formId = e.target.name
+			mydiv = document.querySelector("div[name='"+formId+"']")
+			mydiv.remove()
+		}
+		function myfunc4(e){
+			e.preventDefault()
+			formId = e.target.name
+			mydiv = document.querySelector("div[name='"+formId+"']")
+			curBtn = mydiv.querySelector("button[id='edit']")
+			delBtn = mydiv.querySelector("button[id='delete']")
+			// console.log(curBtn)
+			curBtn.style.visibility = "hidden"
+			delBtn.style.visibility = "hidden"
+			curForm = document.querySelector("#"+formId)
+			curForm.style.visibility="visible"
+			
+			console.log(mydiv)
+			mydiv.querySelector(".card-text").textContent =""
+			
+		}
+		function myfunc3(e) {
+			e.preventDefault()
+			formId = e.target.id
+			cardName = formId
+			const cd = document.querySelector("[name='"+cardName+"']")
+			console.log(cd.getAttribute("name"))
+			const curForm = document.querySelector("#"+formId)
+			console.log(formId)
+			// curForm.setAttribute("hidden","true")
+			curForm.style.visibility = "hidden"
+			const reqC = cd.childNodes[0].childNodes[0]
+			text = cd.querySelector(".card-text")
+			f1 = false 
+			if(text == null){
+				text = document.createElement("p")
+				f1 = true
+			}
+			text.textContent = curForm.childNodes[0].value
+			console.log(curForm.childNodes)
+			text.setAttribute("class","card-text")
+			// id ="create"class="btn btn-outline-success"
+			button = cd.querySelector("#edit")
+			delBtn = cd.querySelector("#delete")
+			f2 = false
+			if(button == null){
+				button = document.createElement("button")
+				button.setAttribute("id", "edit")
+				button.setAttribute("name", formId)
+				button.setAttribute("class", "btn btn-secondary")
+				button.setAttribute("onclick", "myfunc4(event)")
+				button.textContent = "Edit"
+				f2 = true
+			}else{
+				button.style.visibility = "visible"
+			}
+			f3 = false
+			if(delBtn == null){
+				delBtn = document.createElement("button")
+				delBtn.setAttribute("id", "delete")
+				delBtn.setAttribute("name", formId)
+				delBtn.setAttribute("class", "btn btn-danger")
+				delBtn.setAttribute("style","float:right")
+				delBtn.setAttribute("onclick", "myfunc5(event)")
+				delBtn.textContent = "Delete"
+				f3 = true
+			}else{
+				delBtn.style.visibility = "visible"
+			}
+			if(f1)
+			reqC.appendChild(text)
+			if(f2)
+			reqC.appendChild(button)
+			if(f3)
+			reqC.appendChild(delBtn)
+		}
+		function myfunc2(e) {
+			e.preventDefault()
+			const db = document.querySelector("#normal-dashboard")
+			const formInp = document.querySelector("#card-name")
+			// const grp = document.querySelector("#list-of-buckets")
+			// console.log(inp.value)
+			// id="drag1" draggable="true" ondragstart="drag(event)" class="col"
+			const p = document.createElement("div")
+			p.setAttribute("class", "col")
+			p.setAttribute("ondragstart", "drag(event)")
+			p.setAttribute("draggable", "true")
+			// class="card" style="background-color:rgb(96, 254, 167)
+			const pc = document.createElement("div")
+			pc.setAttribute("class","card")
+			pc.setAttribute("style","background-color:rgb("+ (Math.random()*100 + 150 ) +"," +(Math.random()*140 + 110)+","+ (Math.random()*180 +60 )+")")
+			const pcc = document.createElement("div")
+			pcc.setAttribute("class", "card-body")
+			const pccc = document.createElement("h5")
+			pccc.setAttribute("class","card-title" )
+			pccc.textContent = formInp.value
+
+			const form = document.createElement("form")
+			form.setAttribute("class", "d-flex")
+			form.setAttribute("id", remspace(formInp.value) )
+			form.setAttribute("onsubmit", "myfunc3(event)")
+			// <input id = "card-name" class="form-control me-2" type="search" placeholder="Card Name" aria-label="Search" required>
+			const inpField = document.createElement("input")
+			inpField.setAttribute("id","inp-card-body")
+			inpField.setAttribute("class" , "form-control me-2")
+			inpField.setAttribute("placeholder","Enter Query")
+			inpField.setAttribute("required","true")
+			form.appendChild(inpField)
+			const subBtn = document.createElement("button")
+			// <button id ="add-card"class="btn btn-outline-success" type="add" >Add Card</button>
+			subBtn.setAttribute("id","add-card-body")
+			subBtn.setAttribute("class", "btn btn-outline-success")
+			subBtn.setAttribute("type","add")
+			subBtn.textContent = "Submit"
+			form.appendChild(subBtn)
+			pcc.appendChild(pccc)
+			pcc.appendChild(form)
+			pc.appendChild(pcc)
+			p.appendChild(pc)
+			p.setAttribute("name", remspace(formInp.value))
+			p.setAttribute("id", "div-"+remspace(formInp.value))
+			db.appendChild(p)
+			// const title = document.createElement("h4")
+			// title.textContent = inp.value
+			// p.appendChild(title)
+			// grp.appendChild(p)
+		}
+	
+	</script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<title>Document</title>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-expand-lg navbar-light bg-light navbar-default" style = "margin : 3">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Messaging/</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+				data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+				aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#"></a>
+					</li>
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+							data-bs-toggle="dropdown" aria-expanded="false">
+							Affinity Map
+						</a>
+						<ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+							
+						</ul>
+					</li>
+					
+				</ul>
+				<form id = "New-card" class="container-fluid d-flex"  onsubmit="myfunc2(event)">
+					<input id = "card-name" class="form-control me-2" type="search" placeholder="Card Name" aria-label="Search" required>
+					<button id ="add-card"class="btn btn-outline-success" style="white-space: nowrap;text-align: center;" type="add" >Add Card</button>
+				</form>
+				<form id = "myform" class="container d-flex"  onsubmit="myfunc(event)">
+					<input id = "group-name" class="form-control me-2" type="search" placeholder="Group Name" aria-label="Search" required>
+					<button id ="create"class="btn btn-outline-success" type="create" >Create</button>
+				</form>
+				
+				<button id ="sort"class="btn btn-outline-success" type="sort" onclick="sort(event)">Sort</button>
+				
+
+			</div>
+		</div>
+	</nav>
+
+
+
+
+	<div id = "normal-dashboard" class="row row-cols-5 row-cols g-4">
+		<!-- <div id="drag1" draggable="true" ondragstart="drag(event)" class="col">
+			<div class="card" style="background-color:rgb(96, 254, 167)">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a longer card with supporting text below as a
+						natural lead-in to additional content. This content is a little bit
+						longer.</p>
+				</div>
+			</div>
+		</div>
+		<div id="drag1" draggable="true" ondragstart="drag(event)" class="col">
+			<div class="card" style="background-color:rgb(240, 137, 239)">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a longer card with supporting text below as a
+						natural lead-in to additional content. This content is a little bit
+						longer.</p>
+				</div>
+			</div>
+		</div>
+		<div id="drag1" draggable="true" ondragstart="drag(event)" class="col">
+			<div class="card" style="background-color:rgb(0, 221, 255)">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a longer card with supporting text below as a
+						natural lead-in to additional content. This content is a little bit
+						longer.</p>
+				</div>
+			</div>
+		</div>
+		<div id="drag1" draggable="true" ondragstart="drag(event)" class="col">
+			<div class="card" style="background-color:rgb(246, 246, 98)">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a longer card with supporting text below as a
+						natural lead-in to additional content.</p>
+				</div>
+			</div>
+		</div>
+		<div id="drag1" draggable="true" ondragstart="drag(event)" class="col">
+			<div class="card" style="background-color:rgb(0, 255, 255)">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a longer card with supporting text below as a
+						natural lead-in to additional content. This content is a little bit
+						longer.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div id="div1" ondrop="drop(event)" ondragover="allowDrop(event)" class="row row-cols-5 row-cols g-4">
+		<div id="drag1" draggable="true" ondragstart="drag(event)" class="col">
+			<div class="card" style="background-color:rgb(0, 255, 255)">
+				<img src="..." class="card-img-top" alt="...">
+				<div class="card-body">
+					<h5 class="card-title">Card title</h5>
+					<p class="card-text">This is a longer card with supporting text below as a
+						natural lead-in to additional content. This content is a little bit
+						longer.</p>
+				</div>
+			</div>
+		</div> -->
+	</div> 
+	<div id="list-of-buckets" ondrop="drop(event)" ondragover="allowDrop(event)" class = "row row-cols-9 row-cols g-4" >
+
+	</div>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+		crossorigin="anonymous"></script>
+</body>
+
+</html>
